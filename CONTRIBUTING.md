@@ -125,8 +125,8 @@ please check [its own contribution guidelines](https://github.com/apache/incubat
 
 ### Code convention
 We are following Google Code style:
-* [Java style](http://google-styleguide.googlecode.com/svn/trunk/javaguide.html) 
-* [Shell style](https://google-styleguide.googlecode.com/svn/trunk/shell.xml)
+* [Java style](https://google.github.io/styleguide/javaguide.html)
+* [Shell style](https://google.github.io/styleguide/shell.xml)
 
 Check style report location are in `${submodule}/target/site/checkstyle.html`
 Test coverage report location are in `${submodule}/target/site/cobertura/index.html`
@@ -219,9 +219,12 @@ Server will be run on http://localhost:8080
 ## JIRA
 Zeppelin manages it's issues in Jira. [https://issues.apache.org/jira/browse/ZEPPELIN](https://issues.apache.org/jira/browse/ZEPPELIN)
 
+## Where to Start
+You can find issues for [beginner](https://issues.apache.org/jira/browse/ZEPPELIN-924?jql=project%20%3D%20ZEPPELIN%20and%20status%20%3D%20Open%20and%20labels%20in%20\(beginner%2C%20newbie\))
+
 ## Stay involved
 Everyone is welcome to join our mailing list:
 
- * [users@zeppelin.incubator.apache.org](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-users/) is for usage questions, help, and announcements [ [subscribe](mailto:users-subscribe@zeppelin.incubator.apache.org?subject=send%20this%20email%20to%20subscribe), [unsubscribe](mailto:users-unsubscribe@zeppelin.incubator.apache.org?subject=send%20this%20email%20to%20unsubscribe), [archive](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-users/) ]
- * [dev@zeppelin.incubator.apache.org](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-users/) is for people who want to contribute code to Zeppelin.[ [subscribe](mailto:dev-subscribe@zeppelin.incubator.apache.org?subject=send%20this%20email%20to%20subscribe), [unsubscribe](mailto:dev-unsubscribe@zeppelin.incubator.apache.org?subject=send%20this%20email%20to%20unsubscribe), [archive](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-dev/) ]
- * [commits@zeppelin.incubator.apache.org](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-commits/) is for commit messages and patches to Zeppelin. [ [subscribe](mailto:commits-subscribe@zeppelin.incubator.apache.org?subject=send%20this%20email%20to%20subscribe), [unsubscribe](mailto:commits-unsubscribe@zeppelin.incubator.apache.org?subject=send%20this%20email%20to%20unsubscribe), [archive](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-commits/) ]
+ * [users@zeppelin.apache.org](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-users/) is for usage questions, help, and announcements [ [subscribe](mailto:users-subscribe@zeppelin.apache.org?subject=send%20this%20email%20to%20subscribe), [unsubscribe](mailto:users-unsubscribe@zeppelin.apache.org?subject=send%20this%20email%20to%20unsubscribe), [archive](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-users/) ]
+ * [dev@zeppelin.apache.org](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-users/) is for people who want to contribute code to Zeppelin.[ [subscribe](mailto:dev-subscribe@zeppelin.apache.org?subject=send%20this%20email%20to%20subscribe), [unsubscribe](mailto:dev-unsubscribe@zeppelin.apache.org?subject=send%20this%20email%20to%20unsubscribe), [archive](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-dev/) ]
+ * [commits@zeppelin.apache.org](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-commits/) is for commit messages and patches to Zeppelin. [ [subscribe](mailto:commits-subscribe@zeppelin.apache.org?subject=send%20this%20email%20to%20subscribe), [unsubscribe](mailto:commits-unsubscribe@zeppelin.apache.org?subject=send%20this%20email%20to%20unsubscribe), [archive](http://mail-archives.apache.org/mod_mbox/incubator-zeppelin-commits/) ]
