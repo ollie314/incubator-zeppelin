@@ -17,13 +17,49 @@
 
 package org.apache.zeppelin.interpreter;
 
+import java.util.List;
+
 /**
  *
  */
 public class InterpreterOption {
   boolean remote;
+  String host = null;
+  int port = -1;
   boolean perNoteSession;
   boolean perNoteProcess;
+  
+  boolean isExistingProcess;
+  boolean setPermission;
+  List<String> users;
+
+  public boolean isExistingProcess() {
+    return isExistingProcess;
+  }
+
+  public void setExistingProcess(boolean isExistingProcess) {
+    this.isExistingProcess = isExistingProcess;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+  public void setHost(String host) {
+    this.host = host;
+  }
+
+  public boolean permissionIsSet() {
+    return setPermission;
+  }
+
+  public void setUserPermission(boolean setPermission) {
+    this.setPermission = setPermission;
+  }
+
+  public List<String> getUsers() {
+    return users;
+  }
 
   public InterpreterOption() {
     remote = false;
@@ -47,6 +83,14 @@ public class InterpreterOption {
 
   public void setPerNoteSession(boolean perNoteSession) {
     this.perNoteSession = perNoteSession;
+  }
+
+  public String getHost() {
+    return host;
+  }
+
+  public int getPort() {
+    return port;
   }
 
   public boolean isPerNoteProcess() {

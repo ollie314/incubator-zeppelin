@@ -14,97 +14,25 @@
 
 'use strict';
 
-angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootScope, $http, $routeParams,
-    $location, notebookListDataFactory, baseUrlSrv, websocketMsgSrv, arrayOrderingSrv) {
-  /** Current list of notes (ids) */
-
-  $scope.showLoginWindow = function() {
-    setTimeout(function() {
-      angular.element('#userName').focus();
-    }, 500);
-  };
+angular.module('zeppelinWebApp')
+.controller('NavCtrl', function($scope, $rootScope, $http, $routeParams,
+    $location, notebookListDataFactory, baseUrlSrv, websocketMsgSrv, arrayOrderingSrv, searchService) {
 
   var vm = this;
-  vm.notes = notebookListDataFactory;
-  vm.connected = websocketMsgSrv.isConnected();
-  vm.websocketMsgSrv = websocketMsgSrv;
   vm.arrayOrderingSrv = arrayOrderingSrv;
-  if ($rootScope.ticket) {
-    $rootScope.fullUsername = $rootScope.ticket.principal;
-    $rootScope.truncatedUsername = $rootScope.ticket.principal;
-  }
+  vm.connected = websocketMsgSrv.isConnected();
+  vm.isActive = isActive;
+  vm.logout = logout;
+  vm.notes = notebookListDataFactory;
+  vm.search = search;
+  vm.searchForm = searchService;
+  vm.showLoginWindow = showLoginWindow;
 
-  var MAX_USERNAME_LENGTH=16;
+  $scope.query = {q: ''};
 
-  angular.element('#notebook-list').perfectScrollbar({suppressScrollX: true});
-
-  $scope.$on('setNoteMenu', function(event, notes) {
-    notebookListDataFactory.setNotes(notes);
-  });
-
-  $scope.$on('setConnectedStatus', function(event, param) {
-    vm.connected = param;
-  });
-
-  $scope.checkUsername = function () {
-    if ($rootScope.ticket) {
-      if ($rootScope.ticket.principal.length <= MAX_USERNAME_LENGTH) {
-        $rootScope.truncatedUsername = $rootScope.ticket.principal;
-      }
-      else {
-        $rootScope.truncatedUsername = $rootScope.ticket.principal.substr(0, MAX_USERNAME_LENGTH) + '..';
-      }
-    }
-    if (_.isEmpty($rootScope.truncatedUsername)) {
-      $rootScope.truncatedUsername = 'Connected';
-    }
-  };
-
-  $scope.$on('loginSuccess', function(event, param) {
-    $scope.checkUsername();
-    loadNotes();
-  });
-
-  $scope.logout = function() {
-    $http.post(baseUrlSrv.getRestApiBase()+'/login/logout')
-      .success(function(data, status, headers, config) {
-        $rootScope.userName = '';
-        $rootScope.ticket.principal = '';
-        $rootScope.ticket.ticket = '';
-        $rootScope.ticket.roles = '';
-        BootstrapDialog.show({
-           message: 'Logout Success'
-        });
-        setTimeout(function() {
-          window.location = '#';
-          window.location.reload();
-        }, 1000);
-      }).
-      error(function(data, status, headers, config) {
-        console.log('Error %o %o', status, data.message);
-      });
-  };
-
-  $scope.search = function(searchTerm) {
-    $location.url(/search/ + searchTerm);
-  };
-
-  function loadNotes() {
-    websocketMsgSrv.getNotebookList();
-  }
-
-  function isActive(noteId) {
-    return ($routeParams.noteId === noteId);
-  }
-
-  $rootScope.noteName = function(note) {
-    if (!_.isEmpty(note)) {
-      return arrayOrderingSrv.getNoteName(note);
-    }
-  };
+  initController();
 
   function getZeppelinVersion() {
-    console.log('version');
     $http.get(baseUrlSrv.getRestApiBase() + '/version').success(
       function(data, status, headers, config) {
         $rootScope.zeppelinVersion = data.body;
@@ -114,11 +42,71 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function($scope, $rootSco
       });
   }
 
-  vm.loadNotes = loadNotes;
-  vm.isActive = isActive;
+  function initController() {
+    angular.element('#notebook-list').perfectScrollbar({suppressScrollX: true});
 
-  getZeppelinVersion();
-  vm.loadNotes();
-  $scope.checkUsername();
+    angular.element(document).click(function() {
+      $scope.query.q = '';
+    });
+
+    getZeppelinVersion();
+    loadNotes();
+  }
+
+  function isActive(noteId) {
+    return ($routeParams.noteId === noteId);
+  }
+
+  function loadNotes() {
+    websocketMsgSrv.getNotebookList();
+  }
+
+  function logout() {
+    var logoutURL = baseUrlSrv.getRestApiBase() + '/login/logout';
+
+    //for firefox and safari
+    logoutURL = logoutURL.replace('//', '//false:false@');
+    $http.post(logoutURL).error(function() {
+      //force authcBasic (if configured) to logout
+      $http.post(logoutURL).error(function() {
+        $rootScope.userName = '';
+        $rootScope.ticket.principal = '';
+        $rootScope.ticket.ticket = '';
+        $rootScope.ticket.roles = '';
+        BootstrapDialog.show({
+          message: 'Logout Success'
+        });
+        setTimeout(function() {
+          window.location.replace('/');
+        }, 1000);
+      });
+    });
+  }
+
+  function search(searchTerm) {
+    $location.path('/search/' + searchTerm);
+  }
+
+  function showLoginWindow() {
+    setTimeout(function() {
+      angular.element('#userName').focus();
+    }, 500);
+  }
+
+  /*
+  ** $scope.$on functions below
+  */
+
+  $scope.$on('setNoteMenu', function(event, notes) {
+    notebookListDataFactory.setNotes(notes);
+  });
+
+  $scope.$on('setConnectedStatus', function(event, param) {
+    vm.connected = param;
+  });
+
+  $scope.$on('loginSuccess', function(event, param) {
+    loadNotes();
+  });
 
 });

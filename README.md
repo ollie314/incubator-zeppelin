@@ -1,11 +1,11 @@
-#Zeppelin
+# Apache Zeppelin
 
 **Documentation:** [User Guide](http://zeppelin.apache.org/docs/latest/index.html)<br/>
 **Mailing Lists:** [User and Dev mailing list](http://zeppelin.apache.org/community.html)<br/>
-**Continuous Integration:** [![Build Status](https://secure.travis-ci.org/apache/incubator-zeppelin.png?branch=master)](https://travis-ci.org/apache/incubator-zeppelin) <br/>
-**Contributing:** [Contribution Guide](https://github.com/apache/incubator-zeppelin/blob/master/CONTRIBUTING.md)<br/>
+**Continuous Integration:** [![Build Status](https://secure.travis-ci.org/apache/zeppelin.png?branch=master)](https://travis-ci.org/apache/zeppelin) <br/>
+**Contributing:** [Contribution Guide](https://zeppelin.apache.org/contribution/contributions.html)<br/>
 **Issue Tracker:** [Jira](https://issues.apache.org/jira/browse/ZEPPELIN)<br/>
-**License:** [Apache 2.0](https://github.com/apache/incubator-zeppelin/blob/master/LICENSE)
+**License:** [Apache 2.0](https://github.com/apache/zeppelin/blob/master/LICENSE)
 
 
 **Zeppelin**, a web-based notebook that enables interactive data analytics. You can make beautiful data-driven, interactive and collaborative documents with SQL, Scala and more.
@@ -18,7 +18,7 @@ Core feature:
 To know more about Zeppelin, visit our web site [http://zeppelin.apache.org](http://zeppelin.apache.org)
 
 ## Requirements
- * Git 
+ * Git
  * Java 1.7
  * Tested on Mac OSX, Ubuntu 14.X, CentOS 6.X, Windows 7 Pro SP1
  * Maven (if you want to build from the source code)
@@ -39,25 +39,46 @@ sudo apt-get install libfontconfig
 ```
 
 #### Proxy settings (optional)
-If you are behind a corporate Proxy with NTLM authentication you can use [Cntlm Authentication Proxy](http://cntlm.sourceforge.net/) .
-
-Before build start, run these commands from shell. 
+First of all, set your proxy configuration on Maven `settings.xml`.
 ```
-export http_proxy=http://localhost:3128
-export https_proxy=http://localhost:3128
-export HTTP_PROXY=http://localhost:3128
-export HTTPS_PROXY=http://localhost:3128
+<settings>
+  <proxies>
+    <proxy>
+      <id>proxy-http</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>localhost</host>
+      <port>3128</port>
+      <!-- <username>usr</username>
+      <password>pwd</password> -->
+      <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts>
+    </proxy>
+    <proxy>
+      <id>proxy-https</id>
+      <active>true</active>
+      <protocol>https</protocol>
+      <host>localhost</host>
+      <port>3128</port>
+      <!-- <username>usr</username>
+      <password>pwd</password> -->
+      <nonProxyHosts>localhost|127.0.0.1</nonProxyHosts>
+    </proxy>
+  </proxies>
+</settings>
+```
+
+Then, run these commands from shell.
+```
 npm config set proxy http://localhost:3128
 npm config set https-proxy http://localhost:3128
 npm config set registry "http://registry.npmjs.org/"
 npm config set strict-ssl false
-npm cache clean
 git config --global http.proxy http://localhost:3128
 git config --global https.proxy http://localhost:3128
 git config --global url."http://".insteadOf git://
 ```
 
-After build is complete, run these commands to cleanup.
+Cleanup: set `active false` in Maven `settings.xml` and run these commands.
 ```
 npm config rm proxy
 npm config rm https-proxy
@@ -66,16 +87,15 @@ git config --global --unset https.proxy
 git config --global --unset url."http://".insteadOf
 ```
 
-_Notes:_ 
- - If you are on Windows replace `export` with `set` to set env variables
- - Replace `localhost:3128` with standard pattern `http://user:pwd@host:port`
- - Git configuration is needed because Bower use it for fetching from GitHub
- 
+_Notes:_
+ - If you are behind NTLM proxy you can use [Cntlm Authentication Proxy](http://cntlm.sourceforge.net/).
+ - Replace `localhost:3128` with the standard pattern `http://user:pwd@host:port`.
+
 #### Install maven
 ```
-wget http://www.eu.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
-sudo tar -zxf apache-maven-3.3.3-bin.tar.gz -C /usr/local/
-sudo ln -s /usr/local/apache-maven-3.3.3/bin/mvn /usr/local/bin/mvn
+wget http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+sudo tar -zxf apache-maven-3.3.9-bin.tar.gz -C /usr/local/
+sudo ln -s /usr/local/apache-maven-3.3.9/bin/mvn /usr/local/bin/mvn
 ```
 
 _Notes:_
@@ -104,6 +124,7 @@ Set spark major version
 Available profiles are
 
 ```
+-Pspark-2.0
 -Pspark-1.6
 -Pspark-1.5
 -Pspark-1.4
@@ -136,6 +157,16 @@ Available profiles are
 ```
 
 minor version can be adjusted by `-Dhadoop.version=x.x.x`
+
+##### `-Pscala-[version] (optional)`
+
+set scala version (default 2.10)
+Available profiles are
+
+```
+-Pscala-2.10
+-Pscala-2.11
+```
 
 ##### `-Pyarn` (optional)
 
@@ -174,12 +205,23 @@ Available profiles are
 -Pmapr51
 ```
 
+#### -Pexamples (optional)
+
+Bulid examples under zeppelin-examples directory
+
+
+#### Example
+
 
 Here're some examples:
 
 ```sh
-# basic build
-mvn clean package -Pspark-1.6 -Phadoop-2.4 -Pyarn -Ppyspark
+# build with spark-2.0, scala-2.11
+./dev/change_scala_version.sh 2.11
+mvn clean package -Pspark-2.0 -Phadoop-2.4 -Pyarn -Ppyspark -Psparkr -Pscala-2.11
+
+# build with spark-1.6, scala-2.10
+mvn clean package -Pspark-1.6 -Phadoop-2.4 -Pyarn -Ppyspark -Psparkr
 
 # spark-cassandra integration
 mvn clean package -Pcassandra-spark-1.5 -Dhadoop.version=2.6.0 -Phadoop-2.6 -DskipTests
@@ -203,6 +245,7 @@ mvn clean package -Dignite.version=1.6.0 -DskipTests
 ```sh
 mvn clean package -Pscalding -DskipTests
 ```
+
 
 ### Configure
 If you wish to configure Zeppelin option (like port number), configure the following files:
@@ -259,6 +302,15 @@ And browse [localhost:8080](localhost:8080) in your browser.
 
 For configuration details check __`./conf`__ subdirectory.
 
+### Building for Scala 2.11
+
+To produce a Zeppelin package compiled with Scala 2.11, use the -Pscala-2.11 profile:
+
+```
+./dev/change_scala_version.sh 2.11
+mvn clean package -Pspark-1.6 -Phadoop-2.4 -Pyarn -Ppyspark -Pscala-2.11 -DskipTests clean install
+```
+
 ### Package
 To package the final distribution including the compressed archive, run:
 
@@ -287,4 +339,4 @@ mvn verify
 mvn verify -P using-packaged-distr
 ```
 
-[![Analytics](https://ga-beacon.appspot.com/UA-45176241-4/apache/incubator-zeppelin/README.md?pixel)](https://github.com/igrigorik/ga-beacon)
+[![Analytics](https://ga-beacon.appspot.com/UA-45176241-4/apache/zeppelin/README.md?pixel)](https://github.com/igrigorik/ga-beacon)

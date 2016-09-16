@@ -1,7 +1,7 @@
 ---
 layout: page
-title: "Manual upgrade procedure for Zeppelin"
-description: ""
+title: "Manual Zeppelin version upgrade procedure"
+description: "This document will guide you through a procedure of manual upgrade your Apache Zeppelin instance to a newer version. Apache Zeppelin keeps backward compatibility for the notebook file format."
 group: install
 ---
 <!--
@@ -19,12 +19,14 @@ limitations under the License.
 -->
 {% include JB/setup %}
 
-## Manual upgrade procedure for Zeppelin
+# Manual upgrade procedure for Zeppelin
+
+<div id="toc"></div>
 
 Basically, newer version of Zeppelin works with previous version notebook directory and configurations.
 So, copying `notebook` and `conf` directory should be enough.
 
-### Instructions
+## Instructions
 1. Stop Zeppelin
 
     ```
@@ -33,7 +35,7 @@ So, copying `notebook` and `conf` directory should be enough.
 
 1. Copy your `notebook` and `conf` directory into a backup directory
 
-1. Download newer version of Zeppelin and Install. See [Install page](./install.html)
+1. Download newer version of Zeppelin and Install. See [Install page](./install.html#installation).
 
 1. Copy backup `notebook` and `conf` directory into newer version of Zeppelin `notebook` and `conf` directory
 
@@ -42,3 +44,10 @@ So, copying `notebook` and `conf` directory should be enough.
    ```
    bin/zeppelin-daemon.sh start
    ```
+
+## Migration Guide
+
+### Upgrading from Zeppelin 0.6 to 0.7
+
+ - From 0.7, we don't use `ZEPPELIN_JAVA_OPTS` as default value of `ZEPPELIN_INTP_JAVA_OPTS` and also the same for `ZEPPELIN_MEM`/`ZEPPELIN_INTP_MEM`. If user want to configure the jvm opts of interpreter process, please set `ZEPPELIN_INTP_JAVA_OPTS` and `ZEPPELIN_INTP_MEM` explicitly.
+ - Mapping from `%jdbc(prefix)` to `%prefix` is no longer available. Instead, you can use %[interpreter alias] with multiple interpreter setttings on GUI.
